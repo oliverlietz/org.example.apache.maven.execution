@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.example.apache.maven.execution</groupId>
+  <artifactId>org.example.apache.maven.execution</artifactId>
+  <version>1-SNAPSHOT</version>
+
+  <name>Example Apache Maven Execution</name>
+  <description>Minimal example to understand Maven mojo executions</description>
+
+  <properties>
+    <project.build.outputTimestamp>1970-01-01T00:00:00Z</project.build.outputTimestamp>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.release>8</maven.compiler.release>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <toolchains>
+            <jdk>
+              <version>1.8</version>
+            </jdk>
+            <jdk>
+              <version>11</version>
+            </jdk>
+            <jdk>
+              <version>17</version>
+            </jdk>
+          </toolchains>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M5</version>
+        <executions>
+          <execution>
+            <id>8</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <jdkToolchain>
+                <version>1.8</version>
+              </jdkToolchain>
+            </configuration>
+          </execution>
+          <execution>
+            <id>11</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <!-- expected: "WARNING: Unknown module: org.apache.sling.commons.threads specified to..." -->
+              <argLine>--add-opens java.base/java.lang=org.apache.sling.commons.threads</argLine>
+              <jdkToolchain>
+                <version>11</version>
+              </jdkToolchain>
+            </configuration>
+          </execution>
+          <execution>
+            <id>17</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <argLine>-Dfoo=bar</argLine>
+              <jdkToolchain>
+                <version>17</version>
+              </jdkToolchain>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>
